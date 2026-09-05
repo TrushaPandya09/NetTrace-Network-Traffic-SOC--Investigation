@@ -1,48 +1,44 @@
+## 🔎 Investigation 03 — Host & Endpoint Analysis Findings
+1. Investigation Summary
 
-# 🔎 Investigation 03 — Host & Endpoint Analysis Findings
-
-## 1. Investigation Summary
-
-Host and endpoint analysis was performed on the `nb6-startup.pcap` capture using Wireshark's **Statistics → Endpoints** functionality.
+Host and endpoint analysis was performed on the nb6-startup.pcap capture using Wireshark's Statistics → Endpoints functionality.
 
 The investigation examined Ethernet, IPv4, IPv6, TCP and UDP endpoints to identify active hosts, communication patterns, and connections requiring further analysis.
 
 A significant TCP communication between an internal endpoint and an external destination was identified and selected as the primary target for further investigation.
 
----
-
 ## 2. 🌐 IPv4 Endpoint Findings
 
 The IPv4 Endpoint view contains:
 
-**18 IPv4 endpoints**
+18 IPv4 endpoints
 
 The following key endpoints were observed:
 
-| Endpoint | Classification | Packets | Bytes |
-|---|---|---:|---:|
-| `10.251.23.139` | Internal | 152 | 44 KB |
-| `10.194.143.1` | Internal | 3 | 1 KB |
-| `172.26.235.86` | Private | 4 | 3 KB |
-| `86.66.0.227` | External | 116 | 37 KB |
-| `95.136.242.99` | External | 154 | 15 KB |
-| `109.0.66.10` | External | 112 | 12 KB |
-| `109.0.66.31` | External | 20 | 2 KB |
-| `109.0.66.1` | External | 2 | 180 bytes |
-| `109.6.1.72` | External | 86 | 7 KB |
+Endpoint	Classification	Packets	Bytes
+10.251.23.139	Internal	152	44 KB
+10.194.143.1	Internal	3	1 KB
+172.26.235.86	Private	4	3 KB
+86.66.0.227	External	116	37 KB
+95.136.242.99	External	154	15 KB
+109.0.66.10	External	112	12 KB
+109.0.66.31	External	20	2 KB
+109.0.66.1	External	2	180 bytes
+109.6.1.72	External	86	7 KB
 
 Additional IPv4 endpoints are present in the capture.
 
-### Assessment
+Assessment
 
 The endpoint analysis shows communication involving internal/private addresses as well as multiple external IPv4 addresses.
 
 The internal endpoint:
 
-```text
 10.251.23.139
 
- 3. IPv6 Endpoint Findings
+was observed with significant network activity.
+
+## 3. 🌍 IPv6 Endpoint Findings
 
 The IPv6 Endpoint view contains:
 
@@ -63,7 +59,7 @@ The observed IPv6 endpoints include link-local and multicast addresses.
 
 For this investigation, the primary focus remains on the IPv4/TCP communication requiring deeper analysis.
 
- 4. 🔗 TCP Endpoint Findings
+## 4. 🔗 TCP Endpoint Findings
 
 The TCP Endpoint view contains:
 
@@ -73,8 +69,7 @@ The most significant entry is:
 
 10.251.23.139 → 86.66.0.227:80
 
-Observed:
-
+Observed
 Attribute	Value
 Source	10.251.23.139
 Destination	86.66.0.227
@@ -90,7 +85,7 @@ Port 80 identifies the destination service as HTTP traffic at the transport/appl
 
 Important: The presence of an external IP or TCP port 80 does not by itself indicate malicious activity.
 
- 5. 📡 UDP Endpoint Findings
+## 5. 📡 UDP Endpoint Findings
 
 The UDP Endpoint view contains:
 
@@ -104,7 +99,7 @@ The number of UDP endpoint entries indicates that UDP represents a significant p
 
 The individual UDP communications require correlation with the protocol hierarchy and packet contents to determine their purpose.
 
- 6. 🖥️ Ethernet Endpoint Findings
+## 6. 🖥️ Ethernet Endpoint Findings
 
 The Ethernet Endpoint view contains:
 
@@ -118,16 +113,13 @@ The Ethernet endpoint analysis provides a lower-level view of the hosts and devi
 
 This supports the higher-layer IPv4, IPv6, TCP and UDP endpoint analysis.
 
- 7. 🚩 Finding 01 — Priority Internal-to-External TCP Communication
+## 7. 🚩 Finding 01 — Priority Internal-to-External TCP Communication
 
 The primary communication identified for further investigation is:
 
-10.251.23.139
-        ↓
-86.66.0.227:80
+10.251.23.139 → 86.66.0.227:80
 
-Observed traffic:
-
+Observed Traffic
 116 packets
 37 KB
 TCP
@@ -149,7 +141,7 @@ The available endpoint evidence does not establish malicious activity.
 
 Further packet-level investigation is required.
 
-8. 🚩 Finding 02 — Significant External Endpoints
+## 8. 🚩 Finding 02 — Significant External Endpoints
 
 Several external endpoints show notable packet activity.
 
@@ -168,8 +160,7 @@ However, traffic volume alone cannot determine whether an endpoint is benign or 
 
 Additional context such as protocol, port, DNS information, packet contents and connection behavior is required.
 
- 9. ❓ Investigation Questions & Answers
-
+## 9. ❓ Investigation Questions & Answers
 Q1. How many IPv4 endpoints are present?
 
 Answer: The Wireshark IPv4 Endpoint view contains 18 IPv4 endpoints.
@@ -251,7 +242,7 @@ DNS/domain information
 Timing and repeated connections
 Potential indicators of compromise
 
- 10. 📊 Endpoint Summary
+## 10. 📊 Endpoint Summary
 Endpoint Type	Count	Investigation Result
 Ethernet	87	Lower-layer endpoint activity identified
 IPv4	18	Multiple internal and external endpoints identified
@@ -259,7 +250,8 @@ IPv6	5	IPv6 and multicast/link-local activity observed
 TCP	9	Priority TCP communication identified
 UDP	87	Multiple UDP endpoint/port combinations identified
 
- 11. 🧠 Analyst Assessment
+## 11. 🧠 Analyst Assessment
+
 Overall Status: 🟡 Requires Further Investigation
 
 The endpoint analysis successfully established the network hosts and endpoint activity present in the PCAP.
@@ -281,7 +273,7 @@ However, no malicious activity is confirmed at this stage.
 
 Endpoint statistics provide context and prioritization but are insufficient to determine the intent of the communication.
 
- 12. ✅ Conclusion
+## 12. ✅ Conclusion
 
 Investigation #3 identified the endpoint landscape of the nb6-startup.pcap capture across Ethernet, IPv4, IPv6, TCP and UDP.
 
