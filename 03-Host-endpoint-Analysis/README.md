@@ -121,16 +121,16 @@ This communication was prioritized because it represents significant traffic bet
 
 The answers are documented in findings.md.
 
-How many IPv4 endpoints are present?
-How many IPv6 endpoints are present?
-Which internal endpoint has significant traffic?
-Which external endpoints have significant traffic?
-Which TCP communication should be prioritized?
-What destination port is associated with the prioritized TCP communication?
-How many packets and bytes were exchanged?
-How many TCP and UDP endpoint entries are present?
-Does external communication automatically indicate malicious activity?
-What should be investigated next?
+1.How many IPv4 endpoints are present?
+2.How many IPv6 endpoints are present?
+3.Which internal endpoint has significant traffic?
+4.Which external endpoints have significant traffic?
+5.Which TCP communication should be prioritized?
+6.What destination port is associated with the prioritized TCP communication?
+7.How many packets and bytes were exchanged?
+8.How many TCP and UDP endpoint entries are present?
+9.Does external communication automatically indicate malicious activity?
+10.What should be investigated next?
 
 ## Investigation Workflow
 
