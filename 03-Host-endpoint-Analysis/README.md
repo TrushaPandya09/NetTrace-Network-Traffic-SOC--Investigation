@@ -1,121 +1,140 @@
 # 🔍 Host & Endpoint Analysis
+# 🔍 Investigation 03 — Host & Endpoint Analysis
 
 ## 📌 Overview
 
-This analysis uses **Wireshark** to identify hosts, examine network conversations, and investigate potentially suspicious communication within the `nb6-startup.pcap` capture.
+This investigation analyzes the hosts and network endpoints observed in the `nb6-startup.pcap` capture using **Wireshark**.
 
-The analysis focuses on distinguishing **internal and external hosts** and identifying communication patterns that require further investigation.
+The analysis focuses on identifying IPv4/IPv6 endpoints, examining endpoint traffic, identifying important TCP/UDP communications, and prioritizing hosts or connections for deeper investigation.
+
+> **Note:** Detailed observations, answers, and analyst assessment are documented in [`findings.md`](./findings.md).
+
+---
+
+## 🎯 Objectives
+
+- Identify active network endpoints.
+- Analyze IPv4 and IPv6 hosts.
+- Examine TCP and UDP endpoint activity.
+- Identify high-volume communication.
+- Identify internal-to-external communication.
+- Determine connections requiring further investigation.
+- Establish targets for the next TCP/UDP investigation.
 
 ---
 
 ## 🛠️ Tools & Data
 
-* **Tool:** Wireshark
-* **Capture:** `nb6-startup.pcap`
-* **Analysis:** Endpoints & IPv4 Conversations
+| Component | Details |
+|---|---|
+| **Tool** | Wireshark |
+| **Capture** | `nb6-startup.pcap` |
+| **Analysis** | Endpoints |
+| **Focus** | IPv4, IPv6, TCP, UDP and Ethernet endpoints |
 
 ---
 
-## 1. Endpoint Identification
+## 1. 🌐 IPv4 Endpoint Analysis
 
 **Wireshark → Statistics → Endpoints → IPv4**
 
-The endpoint analysis was used to identify active hosts and classify them based on their IP addresses.
+The capture contains **18 IPv4 endpoints**.
 
-| Endpoint        | Type     | Packets | Bytes | Priority       |
-| --------------- | -------- | ------: | ----: | -------------- |
-| `10.251.23.139` | Internal |     152 | 44 KB | 🔴 High        |
-| `10.194.143.1`  | Internal |       3 |  1 KB | 🟢 Low         |
-| `172.26.235.86` | Private  |       4 |  3 KB | 🟢 Low         |
-| `95.136.242.99` | External |     154 | 15 KB | 🟡 Investigate |
-| `86.66.0.227`   | External |     116 | 37 KB | 🟡 Investigate |
-| `109.0.66.10`   | External |     112 | 12 KB | 🟡 Investigate |
+Key endpoints selected for investigation include:
 
-> **Note:** Public IP addresses are not automatically malicious. Traffic volume and external communication are indicators for further investigation
+| Endpoint | Classification | Packets | Bytes |
+|---|---|---:|---:|
+| `10.251.23.139` | Internal | 152 | 44 KB |
+| `10.194.143.1` | Internal | 3 | 1 KB |
+| `172.26.235.86` | Private | 4 | 3 KB |
+| `86.66.0.227` | External | 116 | 37 KB |
+| `95.136.242.99` | External | 154 | 15 KB |
+| `109.0.66.10` | External | 112 | 12 KB |
+| `109.0.66.31` | External | 20 | 2 KB |
+| `109.0.66.1` | External | 2 | 180 bytes |
+| `109.6.1.72` | External | 86 | 7 KB |
 
-`Endpoints → IPv4`
-
----
-
-## 2. Conversation Analysis
-
-**Wireshark → Statistics → Conversations → IPv4**
-
-The conversation view was used to determine which hosts communicated with each other and how much traffic was exchanged.
-
-### Key Communication
-
-| Source          | Destination   | Packets | Bytes | Observation                     |
-| --------------- | ------------- | ------: | ----: | ------------------------------- |
-| `10.251.23.139` | `86.66.0.227` |     116 | 37 KB | **High-priority investigation** |
-| `10.251.23.139` | `109.0.66.31` |      20 |  2 KB | Investigate                     |
-| `10.251.23.139` | `109.0.66.1`  |       2 | 180 B | Low activity                    |
-| `10.251.23.139` | `109.0.66.10` |       2 | 192 B | Low activity                    |
-
-
-`Conversations → IPv4`
+> **Note:** The table contains selected endpoints relevant to the investigation. The complete IPv4 endpoint list is available in the Wireshark evidence screenshot.
 
 ---
 
-## 🚩 3. Suspicious Activity Assessment
+## 2. 🌍 IPv6 Endpoint Analysis
 
-The communication:
+**Wireshark → Statistics → Endpoints → IPv6**
+
+The capture contains **5 IPv6 endpoints**.
+
+Observed IPv6 endpoints include:
+
+- `fe80::ca4c:75ff:fe78:ed00`
+- `fe80::e2a1:d7ff:fe18:c270`
+- `ff02::1`
+- `ff02::16`
+- `ff02::1:2`
+
+IPv6 traffic was observed in addition to the IPv4 communications.
+
+---
+
+## 3. 🔗 TCP Endpoint Analysis
+
+**Wireshark → Statistics → Endpoints → TCP**
+
+The TCP endpoint analysis identified **9 TCP endpoint/port entries**.
+
+
+## 4. 📡 UDP Endpoint Analysis
+
+Wireshark → Statistics → Endpoints → UDP
+
+The capture contains 87 UDP endpoint/port entries.
+
+The UDP endpoint view shows multiple source and destination ports, indicating a variety of UDP-based communications within the capture.
+
+These endpoints should be correlated with the protocol hierarchy and packet-level analysis performed in subsequent investigations.
+
+## 5. 🖥️ Ethernet Endpoint Analysis
+
+Wireshark → Statistics → Endpoints → Ethernet
+
+The Ethernet endpoint view contains 87 endpoints.
+
+The capture includes Ethernet-level communication in addition to the IPv4, IPv6, TCP and UDP endpoint activity.
+## 6. 🚩 Priority Communication
+
+The primary communication selected for further investigation is:
+
+10.251.23.139
+       ↓
+86.66.0.227:80
+
+Observed:
+
+Protocol: TCP
+Destination Port: 80
+Packets: 116
+Traffic: 37 KB
+
+This communication was prioritized because it represents significant traffic between an internal endpoint and an external destination.
+
+## 8. ❓ Investigation Questions
+
+The answers are documented in findings.md.
+
+How many IPv4 endpoints are present?
+How many IPv6 endpoints are present?
+Which internal endpoint has significant traffic?
+Which external endpoints have significant traffic?
+Which TCP communication should be prioritized?
+What destination port is associated with the prioritized TCP communication?
+How many packets and bytes were exchanged?
+How many TCP and UDP endpoint entries are present?
+Does external communication automatically indicate malicious activity?
+What should be investigated next?
+
+## Investigation Workflow
+
 
 ```text
-10.251.23.139 → 86.66.0.227
-```
-
-was prioritized because an internal endpoint exchanged **116 packets / 37 KB** with an external IP.
-
-This does **not confirm malicious activity**. Further investigation is required by checking:
-
-* Source and destination ports
-* Protocol
-* DNS/domain information
-* Packet contents
-* Communication timing
-* Repeated connections
-* Threat intelligence for the destination IP
-
-### Initial Assessment
-
-**Status:** 🟡 **Requires Further Investigation**
-
----
-
-## 🧠 Investigation Workflow
-
-```text
-Identify Endpoints
-       ↓
-Classify Internal / External
-       ↓
-Analyze Conversations
-       ↓
-Identify High-Priority Connections
-       ↓
-Check Ports & Protocols
-       ↓
-Inspect Packets
-       ↓
-Enrich IOCs
-       ↓
-Final Assessment
-```
-
----
-
-## 🎯 Key Takeaways
-
-* Identified internal and external IPv4 endpoints.
-* Analyzed host-to-host communication using IPv4 Conversations.
-* Prioritized high-volume internal-to-external communication.
-* Avoided treating public IPs or high traffic as automatically malicious.
-* Established further investigation steps for suspicious connections.
-
----
-
-## ⚠️ Disclaimer
-
-This analysis was performed for **educational and authorized cybersecurity research purposes** using the provided PCAP file.
+10.251.23.139 → 86.66.0.227:80
 
