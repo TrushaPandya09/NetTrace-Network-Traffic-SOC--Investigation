@@ -1,42 +1,40 @@
 # 02 — Protocol Analysis
+# 🔬 Investigation 02 — Protocol Analysis
 
-## 1. Overview
+## 📌 Overview
 
-This phase analyzes the network protocols observed in the captured PCAP file using Wireshark. The objective is to understand the protocol distribution, communication layers, and major application protocols involved in the captured traffic.
+This investigation analyzes the protocols observed within the `nb6-startup.pcap` capture using Wireshark.
 
-The analysis helps establish a baseline of normal and potentially suspicious network activity before moving into deeper traffic investigations.
-
----
-
-## 2. Objectives
-
-- Identify the protocols present in the PCAP.
-- Determine the protocol hierarchy and traffic distribution.
-- Identify the dominant network and transport-layer protocols.
-- Identify application-layer protocols such as HTTP, DNS, TLS, etc.
-- Understand how the protocols are layered during communication.
-- Identify any unusual or unexpected protocols that may require further investigation.
+The objective is to understand the protocol distribution, network-layer structure, transport protocols, and application-layer protocols present in the traffic.
 
 ---
 
-## 3. Tool Used
+## 🎯 Objectives
 
-| Tool | Purpose |
-|---|---|
-| Wireshark | Packet capture analysis and protocol inspection |
-
+* Identify protocols present in the PCAP.
+* Analyze the protocol hierarchy.
+* Determine protocol distribution by packet and byte count.
+* Identify major network and transport-layer protocols.
+* Identify application-layer protocols.
+* Understand protocol encapsulation and layering.
+* Identify protocols that should be examined further in later investigations.
 
 ---
 
-## 4. Protocol Hierarchy Analysis
+## 🛠️ Tool Used
 
-Wireshark's **Protocol Hierarchy Statistics** was used to identify the protocols present in the captured traffic and understand their relative contribution to the packet and byte count.
+| Tool      | Purpose                                                    |
+| --------- | ---------------------------------------------------------- |
+| Wireshark | Protocol hierarchy, packet inspection and traffic analysis |
 
-### Protocol Hierarchy
+---
 
-The observed protocol structure was:
+# 1. 🔬 Protocol Hierarchy Analysis
 
-```text
+Wireshark's **Statistics → Protocol Hierarchy** feature was used to identify the protocols present in the capture and understand their relative contribution to the traffic.
+
+## Observed Protocol Structure
+
 Ethernet
 │
 ├── PPPoE
@@ -49,7 +47,10 @@ Ethernet
 └── IPv4
     │
     ├── UDP
-    │   ├── DNS / NTP / SIP / Syslog
+    │   ├── DNS
+    │   ├── NTP
+    │   ├── SIP
+    │   ├── Syslog
     │   └── L2TP
     │       └── PPP
     │
@@ -61,48 +62,136 @@ Ethernet
     ├── DHCPv6
     ├── ICMP
     └── IGMP
-
+│
 IPv6
 └── ICMPv6
 
 ARP
-|
 
-Protocol Hierarchy 
-| Protocol                                                  | % Packets | Packets | % Bytes |  Bytes |
-| --------------------------------------------------------- | --------: | ------: | ------: | -----: |
-| **Frame**                                                 |    100.0% |     531 |  100.0% |  7,862 |
-| └── Ethernet                                              |    100.0% |     531 |   11.4% |  8,964 |
-|   └── PPP-over-Ethernet Session                           |     50.1% |     266 |    2.0% |  1,596 |
-|     └── Point-to-Point Protocol                           |     50.1% |     266 |    0.7% |    532 |
-|       ├── PPP Link Control Protocol                       |      6.8% |      36 |    0.5% |    384 |
-|       ├── PPP IPv6 Control Protocol                       |      0.4% |       2 |    0.0% |     28 |
-|       ├── PPP IP Control Protocol                         |      2.3% |      12 |    0.3% |    216 |
-|       └── PPP Challenge Handshake Authentication Protocol |      1.1% |       6 |    0.3% |    236 |
-|   └── PPP-over-Ethernet Discovery                         |      3.0% |      16 |    1.1% |    904 |
-| └── Internet Protocol Version 4                           |     69.7% |     370 |    9.4% |  7,412 |
-|   └── User Datagram Protocol                              |     46.9% |     249 |    2.6% |  2,024 |
-|     ├── Syslog Message                                    |      0.4% |       2 |    1.2% |    982 |
-|     ├── Session Initiation Protocol                       |      0.8% |       4 |    3.7% |  2,890 |
-|     ├── Network Time Protocol                             |      6.4% |      34 |    2.1% |  1,632 |
-|     └── Layer 2 Tunneling Protocol                        |     16.2% |      86 |    1.3% |  1,005 |
-|       └── Point-to-Point Protocol                         |     13.9% |      74 |    0.4% |    296 |
-|         ├── PPP Password Authentication Protocol          |      0.4% |       2 |    0.1% |     57 |
-|         ├── PPP Link Control Protocol                     |     10.7% |      57 |    0.8% |    668 |
-|         ├── PPP IPv6 Control Protocol                     |      0.8% |       4 |    0.1% |     56 |
-|         └── PPP IP Control Protocol                       |      0.2% |       1 |    0.0% |     22 |
-|         └── Internet Protocol Version 6                   |      1.9% |      10 |    0.5% |    432 |
-|           └── Internet Control Message Protocol v6        |      1.1% |       6 |    0.2% |    160 |
-|   ├── Dynamic Host Configuration Protocol                 |      2.1% |      11 |    5.4% |  4,273 |
-|   ├── Domain Name System                                  |     21.1% |     112 |    8.7% |  6,873 |
-|   ├── DHCPv6                                              |      0.8% |       4 |    0.5% |    403 |
-|   └── Transmission Control Protocol                       |     21.8% |     116 |    4.9% |  3,840 |
-|     └── Hypertext Transfer Protocol                       |      7.3% |      39 |   29.2% | 22,929 |
-|       ├── Unreassembled Fragmented Packet                 |      0.4% |       2 |    0.0% |      0 |
-|       └── eXtensible Markup Language                      |      1.1% |       6 |    8.1% |  6,403 |
-| ├── Internet Group Management Protocol                    |      0.6% |       3 |    0.1% |     24 |
-| ├── Internet Control Message Protocol                     |      0.4% |       2 |    0.2% |    128 |
-| └── Address Resolution Protocol                           |     16.8% |      89 |    3.2% |  2,492 |
+---
+
+# 2. 📊 Protocol Statistics
+
+The following values were obtained from the Wireshark Protocol Hierarchy analysis.
+
+| Protocol | % Packets | Packets | % Bytes |  Bytes |
+| -------- | --------: | ------: | ------: | -----: |
+| Ethernet |    100.0% |     531 |   11.4% |  8,964 |
+| IPv4     |     69.7% |     370 |    9.4% |  7,412 |
+| UDP      |     46.9% |     249 |    2.6% |  2,024 |
+| TCP      |     21.8% |     116 |    4.9% |  3,840 |
+| DNS      |     21.1% |     112 |    8.7% |  6,873 |
+| ARP      |     16.8% |      89 |    3.2% |  2,492 |
+| L2TP     |     16.2% |      86 |    1.3% |  1,005 |
+| HTTP     |      7.3% |      39 |   29.2% | 22,929 |
+| NTP      |      6.4% |      34 |    2.1% |  1,632 |
+| DHCP     |      2.1% |      11 |    5.4% |  4,273 |
+| ICMPv6   |      1.1% |       6 |    0.2% |    160 |
+
+> The complete protocol hierarchy and statistics are retained as part of the investigation evidence.
+
+---
+
+# 3. 🌐 Network-Layer Protocols
+
+The capture contains traffic associated with:
+
+* IPv4
+* IPv6
+* ARP
+* ICMP
+* ICMPv6
+* IGMP
+
+These protocols provide the foundation for understanding addressing, routing, control, and local network communication within the capture.
+
+---
+
+# 4. 🚚 Transport-Layer Protocols
+
+### TCP
+
+TCP traffic was identified with **116 packets**.
+
+TCP provides connection-oriented communication and will be examined further in the dedicated TCP/UDP investigation.
+
+### UDP
+
+UDP was identified with **249 packets**, making it a significant transport protocol within the capture.
+
+UDP-based application traffic includes protocols such as DNS, NTP, SIP, Syslog, and L2TP.
+
+---
+
+# 5. 🧩 Application & Supporting Protocols
+
+The capture contains several application and supporting protocols, including:
+
+* DNS
+* HTTP
+* NTP
+* SIP
+* Syslog
+* DHCP
+* DHCPv6
+* L2TP
+* PPP
+* PPPoE
+
+These protocols provide different types of network services and will be examined according to their relevance in later investigations.
+
+---
+
+# 6. 🔐 Protocols Requiring Further Analysis
+
+The protocol hierarchy identifies several areas for deeper investigation:
+
+| Protocol | Follow-up Investigation                   |
+| -------- | ----------------------------------------- |
+| DNS      | Queries, domains, responses               |
+| HTTP     | Requests, responses, URLs, streams        |
+| TCP      | Handshakes, flags, ports, streams         |
+| UDP      | Conversations and traffic patterns        |
+| ARP      | Address resolution and host relationships |
+| DHCP     | Host configuration activity               |
+| L2TP/PPP | Tunneling and encapsulated traffic        |
+
+---
+
+# 7. ❓ Investigation Questions
+
+1. Which protocols are present?
+2. Which network-layer protocols dominate the capture?
+3. How much TCP and UDP traffic is present?
+4. Which application-layer protocols are visible?
+5. What protocol relationships and encapsulation layers exist?
+6. Which protocols require deeper investigation?
+
+---
 
 
+# 8. 🔗 Investigation Scope
+
+The protocol analysis establishes the foundation for subsequent investigations involving:
+
+* TCP/UDP communication
+* DNS activity
+* HTTP traffic
+* TLS/HTTPS traffic
+* Host and endpoint behavior
+* Conversation analysis
+
+---
+
+# 📄 Findings
+
+The evidence-based observations, security relevance, and analyst assessment are documented separately in:
+
+`findings.md`
+
+---
+
+## ⚠️ Disclaimer
+
+This investigation was conducted for educational and authorized cybersecurity research purposes using the provided PCAP capture.
 
