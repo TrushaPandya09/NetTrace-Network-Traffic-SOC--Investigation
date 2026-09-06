@@ -1,4 +1,4 @@
-# Investigation 04 — ARP & DHCP Analysis
+# Investigation 05 — ARP & DHCP Analysis
 
 ## 📌 Investigation Overview
 
